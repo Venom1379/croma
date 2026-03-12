@@ -2,14 +2,14 @@ FROM php:8.2-apache
 
 # Install system dependencies
 
-RUN apt-get update && apt-get install -y 
-git 
-curl 
-zip 
-unzip 
-libzip-dev 
-libonig-dev 
-libxml2-dev
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    zip \
+    unzip \
+    libzip-dev \
+    libonig-dev \
+    libxml2-dev
 
 # Install PHP extensions
 
@@ -23,7 +23,7 @@ RUN a2enmod rewrite
 
 WORKDIR /var/www/html
 
-# Copy project
+# Copy project files
 
 COPY . /var/www/html
 
@@ -35,11 +35,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions
+# Fix permissions
 
 RUN chmod -R 777 storage bootstrap/cache
 
-# Apache config
+# Set Apache public folder
 
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
